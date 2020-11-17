@@ -14,7 +14,7 @@
 #           an Adverse Event, and the MDR text.
 #
 #  Revision History:
-#  AB 14NOV2020:  N/A, Initial Release.
+#  AB 17NOV2020:  N/A, Initial Release.
 #######################################################################
 
 # Import Packages
@@ -61,6 +61,7 @@ for ae_file in ae_downloads:
         if "mdr_text" in item
         and item["mdr_text"][0]["text_type_code"]
         == "Description of Event or Problem"
+        and item["adverse_event_flag"] != ""
     ]
 
     ae_list.extend(ae_filtered)

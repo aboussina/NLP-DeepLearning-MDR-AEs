@@ -1,20 +1,24 @@
 #######################################################################
 #  Title:   predict_mdr_ae.py
 #
-#  Purpose: Extract all Medical Device Reports (MDRs) from the openFDA
-#           website for use in downstream processing.
+#  Purpose: Predict whether an MDR event is an adverse event based on
+#           the event description.
 #
 #  Author:  Aaron Boussina, Hedral Inc.
 #
-#  Inputs:  openFDA Website
+#  Inputs:  The model parameters trained by train_mdr_model.py
+#               1.  MdrModelStructure.json
+#               2.  MdrModelWeights.h5
+#               3.  mdrToken.json
 #
-#  Output:  An hdf5 dataset (aeData.h5) output to the current directory
-#           containing all available Medical Device Adverse Events,
-#           the reported date,the device type, whether the event was
-#           an Adverse Event, and the MDR text.
+#           A csv containing event description(s) and device type(s)
+#           (enterAE.csv)
+#
+#  Output:  A printout to the console log of whether the event is
+#           adverse or not.
 #
 #  Revision History:
-#  AB 14NOV2020:  N/A, Initial Release.
+#  AB 17NOV2020:  N/A, Initial Release.
 #######################################################################
 
 
@@ -65,4 +69,15 @@ X_predict = pad_sequences(X_predict, maxlen=padding_length, padding='post')
 #######################################################################
 
 prediction = model.predict(X_predict)
-print(prediction)
+
+for i in range(len(prediction)):
+    if prediction[i][0] > 0.5:
+        ae = 'Yes'
+    else:
+        ae = 'No'
+
+    print("\n")
+    print("Event Description: " + ae_predict['X'][i])
+    print("Adverse Event: " + ae)
+    print("Probability: " + str(prediction[i][0]))
+    print("\n")
