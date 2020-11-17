@@ -31,17 +31,13 @@ def preprocess_mdr_text(df):
             + "^" + word + r"\s+" + "|" + r"\s+" + word + "$"
         )
 
-    stopWordQuery = stopWordQuery[1:]
-
     # Set text to lower case, trim whitespace, and remove non-character
     # values, single character words, stopwords and multiple consecutive
     # spaces
     df['X'] = df['text'].str.lower().replace(
         "[^a-z]", ' ', regex=True
     ).replace(
-        r"\s+[a-z]\s+", ' ', regex=True
-    ).replace(
-        stopWordQuery, ' ', regex=True
+        r"\s+[a-z]\s+" + stopWordQuery, ' ', regex=True
     ).replace(
         r"\s+", ' ', regex=True
     ).str.strip()
