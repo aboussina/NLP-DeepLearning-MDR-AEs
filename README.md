@@ -14,18 +14,21 @@ Events in the MAUDE database were accessed through openFDA (https://open.fda.gov
 <br/>
 
 ### Preprocessing & Model
-Standard text preprocessing was performed (preprocess_mdr_text.py) and MDR text was set to lowercase, all noncharacter values and single character words were removed, and extra whitespace was trimmed.  The data was then split into training (80%) and test (20%) sets and the processed MDR text was tokenized with tensorflow.keras.preprocessing.text.  The Tokenizer word index was created on the training set and the corresponding words were converted to numeric sequences and padded to the longest sentence length.  A dense neural network model was then created with an embedding layer and three hidden layers.  The Adam optimizer was used with binary cross entropy loss to fit the model to the training data.
+Standard text preprocessing was performed (preprocess_mdr_text.py) and MDR text was set to lowercase, all noncharacter values and single character words were removed, and extra whitespace was trimmed.  The data was then split into training (80%) and test (20%) sets and the processed MDR text was tokenized with tensorflow.keras.preprocessing.text.  The Tokenizer word index was created on the training set and the corresponding words were converted to numeric sequences and padded to the longest sentence length.  A dense neural network model was then created with an embedding layer and three hidden layers using Keras.  The Adam optimizer was used with binary cross entropy loss to fit the model to the training data.
 <br/>
 <br/>
 
 ### Results
-[!ROC Curve](/Graphics/roc_curve.png)
+[!ROC Curve](Graphics/roc_curve.png)
 
 
-[!PRC Curve](/Graphics/prc_curve.png)
+[!PRC Curve](Graphics/prc_curve.png)
 
 ## How to Run
-The model parameters (structure, weight, tokenizer) and test set are in the /ModelOutputs directory.  To test the model on specific adverse events, clone this repository, decompress the .xz files, and enter the events into the enterAEs.csv spreadsheet.  Then, run predict_mdr_ae.py to get a terminal printout of the model's predictions.  Alternatively, the model can be built by running:
+The model structure, tokenizer, and test set are in the /ModelOutputs directory.  The larger files (aeFile.file.xz and MdrModelWeights.h5.xz) can be downloaded from https://drive.google.com/drive/folders/1pOyKLxE4jjsqskz_ljVFJSNfxsWbSGmJ?usp=sharing.  Decompress those files and place aeFile.file into the /SourceData directory and MdrModelWeights.h5 into the /ModelOutputs directiory.  Then, to test specific events, enter the events into the enterAEs.csv spreadsheet and run predict_mdr_ae.py to get a terminal printout of the model's predictions.  
+<br/>
+<br/>
+Alternatively, the model can be built by running:
 1. get_mdr_source_data.py to download the entirety of MAUDE events.
 2. train_mdr_model.py to train the neural network.
 3. plot_model_metrics.py to visualize performance.
