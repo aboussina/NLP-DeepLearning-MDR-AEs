@@ -8,13 +8,13 @@
 #
 #  Inputs:  openFDA Website
 #
-#  Output:  An hdf5 dataset (aeData.h5) output to /SourceData
+#  Output:  A Feather dataset (aeData.file) output to /SourceData
 #           containing all available Medical Device Adverse Events,
-#           the reported date,the device type, whether the event was
+#           the reported date, the device type, whether the event was
 #           an Adverse Event, and the MDR text.
 #
 #  Revision History:
-#  AB 17NOV2020:  N/A, Initial Release.
+#  AB 18NOV2020:  N/A, Initial Release.
 #######################################################################
 
 # Import Packages
@@ -44,7 +44,8 @@ ae_downloads = downloads["results"]["device"]["event"]["partitions"]
 
 ae_list = list()
 for ae_file in ae_downloads:
-    cmd = "curl " + ae_downloads[0]["file"] + " | zcat"
+    print("Extracting Info From: " + ae_file['file'])
+    cmd = "curl " + ae_file['file'] + " | zcat"
     ae_details = json.loads(
         subprocess.run(cmd, stdout=subprocess.PIPE, shell=True).stdout
     )["results"]
@@ -55,10 +56,11 @@ for ae_file in ae_downloads:
             item.get("report_date", ""),
             item.get("device", [{"generic_name": ""}])[0]["generic_name"],
             item["adverse_event_flag"],
-            item["mdr_text"][0]["text"],
+            item.get("mdr_text", [{"text": ""}])[0]["text"],
         )
         for item in ae_details
         if "mdr_text" in item
+        and len(item["mdr_text"]) > 0
         and item["mdr_text"][0]["text_type_code"]
         == "Description of Event or Problem"
         and item["adverse_event_flag"] != ""
@@ -69,10 +71,10 @@ for ae_file in ae_downloads:
 
 #######################################################################
 # Convert the concatenated AE list into a dataframe and export the
-# file in hdf5 format to the SourceData folder
+# file in feather format to the SourceData folder
 #######################################################################
 
 ae_df = pd.DataFrame(ae_list)
 ae_df.columns = ["docID", "date", "device_type", "aeYN", "text"]
 
-ae_df.to_hdf("SourceData/aeData.h5", key="maudeDB", mode="w")
+ae_df.to_feather("SourceData/aeData.file")
