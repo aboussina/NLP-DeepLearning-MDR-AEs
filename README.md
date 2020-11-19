@@ -19,10 +19,10 @@ Standard text preprocessing was performed (preprocess_mdr_text.py) and MDR text 
 <br/>
 
 ### Results
-[!ROC Curve](Graphics/roc_curve.png)
+![ROC Curve](Graphics/roc_curve.png)
 
 
-[!PRC Curve](Graphics/prc_curve.png)
+![PRC Curve](Graphics/prc_curve.png)
 
 ## How to Run
 The model structure, tokenizer, and test set are in the /ModelOutputs directory.  The larger files (aeFile.file.xz and MdrModelWeights.h5.xz) can be downloaded from https://drive.google.com/drive/folders/1pOyKLxE4jjsqskz_ljVFJSNfxsWbSGmJ?usp=sharing.  Decompress those files and place aeFile.file into the /SourceData directory and MdrModelWeights.h5 into the /ModelOutputs directiory.  Then, to test specific events, enter the events into the enterAEs.csv spreadsheet and run predict_mdr_ae.py to get a terminal printout of the model's predictions.  
